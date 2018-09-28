@@ -44,22 +44,34 @@ public class Mapper {
 		Object to = null;
 			
 		if(template.has("path")) {
-			Object newObject = getValue(from, template.getString("path"));
-
-			if(newObject instanceof JSONObject){
-				JSONObject newValue = (JSONObject)newObject;
+			String path = template.getString("path");
+			if(path.toLowerCase().equals("$$empty")){
+				to = new JSONObject();
 				if(template.has("nested")){
 					JSONObject nestedObject = (JSONObject)template.get("nested");
 					for(String key : nestedObject.keySet()){
-						Object nestedValue = readObj(newValue, (JSONObject)nestedObject.get(key));
-						newValue.put(key, nestedValue);
+						Object nestedValue = readObj(from, (JSONObject)nestedObject.get(key));
+						((JSONObject)to).put(key, nestedValue);
 					}
 				}
-				to = newValue;
-			} else if(newObject instanceof JSONArray){
-				to = newObject;
 			} else {
-				to = newObject;
+				Object newObject = getValue(from, path);
+
+				if(newObject instanceof JSONObject){
+					JSONObject newValue = (JSONObject)newObject;
+					if(template.has("nested")){
+						JSONObject nestedObject = (JSONObject)template.get("nested");
+						for(String key : nestedObject.keySet()){
+							Object nestedValue = readObj(newValue, (JSONObject)nestedObject.get(key));
+							newValue.put(key, nestedValue);
+						}
+					}
+					to = newValue;
+				} else if(newObject instanceof JSONArray){
+					to = newObject;
+				} else {
+					to = newObject;
+				}
 			}
 		} else {
 			for(String key : template.keySet()) {
@@ -103,12 +115,6 @@ public class Mapper {
 		}
 		
 		return value;
-	}
-	
-	public static void main(String[] args) {
-		
-		Mapper mapper = new Mapper();
-		mapper.mapFile();
 	}
 }
 

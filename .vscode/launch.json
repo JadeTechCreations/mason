@@ -6,6 +6,17 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Runner",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "com.jtc.mason.Runner",
+            "args": "",
+            "projectName": "mason"
+        },
+        {
+            "type": "java",
             "name": "Debug (Launch)",
             "request": "launch",
             "cwd": "${workspaceFolder}",
