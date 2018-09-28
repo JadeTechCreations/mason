@@ -22,8 +22,6 @@
 # VS specific
 .metadata
 .recommenders
-.settings
-.project
 
 # classpath
 .classpath
