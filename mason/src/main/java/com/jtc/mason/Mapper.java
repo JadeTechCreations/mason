@@ -68,7 +68,20 @@ public class Mapper {
 					}
 					to = newValue;
 				} else if(newObject instanceof JSONArray){
-					to = newObject;
+					if(template.has("nested")){
+						((JSONArray)newObject).forEach(item -> {
+							JSONObject obj = (JSONObject) item;
+							JSONObject nestedObject = (JSONObject)template.get("nested");
+							
+							for(String key : nestedObject.keySet()){
+								Object nestedValue = readObj(obj, (JSONObject)nestedObject.get(key));
+								obj.put(key, nestedValue);
+							}
+						});
+						to = newObject;
+					} else {
+						to = newObject;
+					}
 				} else {
 					to = newObject;
 				}
